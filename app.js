@@ -1,5 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const dotenv = require('dotenv');
+const express= require('express');
+const app = express();
 dotenv.config({path:'./config.env'})
 const bot = new TelegramBot(process.env.TOKEN,{polling: true});
 // bot.on('text',msg=>{
@@ -83,6 +85,26 @@ bot.on('message',msg=>{
 })
 
 bot.on("polling_error",console.log)
+
+const port = process.env.PORT||4000;
+const server = app.listen(port,()=>{
+    console.log('server listening on port '+port);
+})
+
+process.on('unhandledRejection', (err) => {
+    console.log('Unhandled Rejection Shutting Down...');
+    console.log(err.name, err.message);
+    server.close(() => {
+      process.exit(1);
+    });
+  });
+  
+  process.on('SIGTERM', () => {
+    console.log('👋 SIGTERM received, shutting down...');
+    server.close(() => {
+      console.log('Process terminates.');
+    });
+  });
 
 // bot.on('callback_query', async(callbackQuery)=>{
 //     await bot.answerCallbackQuery(callbackQuery.id);
