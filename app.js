@@ -85,7 +85,12 @@ bot.on('message',msg=>{
 })
 
 bot.on("polling_error",console.log)
-
+app.get("/",(req,res)=>{
+    res.status(200).json({
+        status:'true',
+        message:'you are here /'
+    })
+})
 const port = process.env.PORT||4000;
 const server = app.listen(port,()=>{
     console.log('server listening on port '+port);
